@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+
+{% block title%}
+{{ title }}
+{% endblock %}
+
+{% block body %}
+  {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'auction' auction.id %}">
+    {% csrf_token %}
+    {% if watching %}
+    <input type="submit" name="rem" value="Unwatch">
+    {% else %}
+    <input type="submit" name="add" value="Watch">
+    {% endif %}
+    </form>
+  {% endif %}
+<div>
+  <h1>Title: {{ auction.title }}</h1>
+  <h3>Description: {{ auction.description }}</h3>
+  <h3>Category: {{ auction.category }}</h3>
+  <h3>Date: {{ auction.date }}</h3>
+  <h3>Starting price: {{ auction.price }}</h3>
+  <h3>Current price: {{ highest_bid }}</h3>
+  {% if auction.picture %}
+  <img src="{{ auction.picture}}" alt="Auction picture" width="300px" height="auto">
+  {% endif %}
+{% if user.is_authenticated %}
+  <form class="forms" method="POST" action="{% url 'auction' auction.id %}">
+    {% csrf_token %}
+    <label for="bid">Bid:</label>
+    <input type="number" name="bid" step="0.01" required="true" min="{{ highest_bid }}" id="id_bid">
+    <input type="submit">
+  </form>
+{% else %}
+<h3>You need to be logged in to bid.</h3>
+{% endif %}
+</div>
+{% if user.is_authenticated %}
+  <form class="forms" method="POST" action="{% url 'auction' auction.id %}">
+  {{ comments_form }}
+  {% csrf_token %}
+  <input type="submit">
+  </form>
+{% else %}
+  <h3>You need to be logged in to comment.</h3>
+{% endif %}
+
+{% if comments %}
+<ul>
+  {% for comment in comments %}
+    <li><h4>{{comment}}</h4></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block title%}
+{{ title }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ title }}</h2>
+    <section class="container">
+    {% for auction in auctions %}
+        <a href="{% url 'auction' auction.id %}">
+                <div class="card">
+                <h1>Title: {{ auction.title }}</h1>
+                <h3>Description: {{ auction.description }}</h3>
+                <h3>Category: {{ auction.category }}</h3>
+                <h3>Current price: {{ auction.price }}</h3>
+                <h3>Date: {{ auction.date }}</h3>
+                {% if auction.picture %}
+                <img src="{{ auction.picture}}" alt="Auction picture">
+                {% endif %}
+                </div>
+        </a>
+        {% empty %}
+        <li>No current listings</li>
+    {% endfor %}
+    </section>
+{% endblock %}
